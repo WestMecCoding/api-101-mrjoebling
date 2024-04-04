@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XHR and Graph</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js -->
 </head>
-<body>    
-    <!-- hello from Index.html! -->
-    <h1>Global Average Temperatures 1880-2023</h1>
+<body>
+    <h1 style="font-family: Arial, Helvetica, sans-serif;text-align: center;">Catalonia Vehicular Car Crashes 2000 to 2011</h1>
     <canvas id="myChart" width="400" height="200"></canvas>
     <script>
         window.addEventListener('load', fetchData);
@@ -20,10 +18,8 @@
         xhr.onreadystatechange = function(){
             if (xhr.readyState === 4 && xhr.status === 200){
                 let data = xhr.responseText;
-                let globalTemps = processData(data);
-                // console.log(data);
-                // console.log(globalTemps);s
-                renderChart(globalTemps);
+                let carCrashes = processData(data);
+                renderChart(carCrashes);
             } else {
                 console.log('something bad happened', xhr.statusText);
             }
@@ -31,31 +27,37 @@
         xhr.send();
     }
     function processData(data){
-        const years = [];
-        const temps = [];
+        const days = [];
+        const crashes= [];
         const rows = data.split('\n').slice(1);
         rows.forEach(row => {
             const cols = row.split(',');
-            years.push(cols[0]);
-            temps.push(14 + parseFloat(cols[1]));
+            days.push(cols[0]);
+            crashes.push(14 + parseFloat(cols[1]));
         });
-        return{ years, temps };
+        return{ days, crashes };
     }
     function renderChart(data){
-        console.log('temps in renderChart', data);
+        console.log('crashes in renderChart', data);
          const ctx = document.getElementById('myChart');
 
   const myChart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
-      labels: data.years,
+      labels: data.days,
       datasets: [{
-        label: 'Temperatures in Celsius',
-        data: data.temps,
-        borderWidth: 1
+        label: 'Car Crashes in Catalonia',
+        data: data.crashes,
+        borderWidth: 3
       }]
     },
-    options: {}
+    options: {
+        scales:{
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
   });
     };
     </script>
